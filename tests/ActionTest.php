@@ -19,7 +19,6 @@ it('can get null actions', function () {
     expect(app(TenantCurrentOrLandlordAction::class)())->toBeNull();
 });
 
-
 it('can get only current tenant', function (Model|Builder $builder, bool $request, bool $result) {
     if ($request) {
         request()->merge(['tenant.only_current' => null]);

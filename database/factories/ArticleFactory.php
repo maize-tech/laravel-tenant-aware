@@ -3,8 +3,8 @@
 namespace Maize\TenantAware\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Maize\TenantAware\Tests\Support\Models\Article;
 use Illuminate\Database\Eloquent\Model;
+use Maize\TenantAware\Tests\Support\Models\Article;
 
 class ArticleFactory extends Factory
 {
@@ -13,7 +13,7 @@ class ArticleFactory extends Factory
     public function definition()
     {
         return [
-            // 
+            //
         ];
     }
 
