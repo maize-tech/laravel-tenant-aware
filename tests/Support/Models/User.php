@@ -8,8 +8,8 @@ use Maize\TenantAware\BelongsToTenant;
 
 class User extends Model
 {
-    use HasFactory;
     use BelongsToTenant;
+    use HasFactory;
 
     protected $fillable = [
         //

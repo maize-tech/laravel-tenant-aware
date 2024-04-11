@@ -48,7 +48,7 @@ it('can set tenant key on creating model', function (?Tenant $tenant) {
     ['tenant' => null],
 ]);
 
-it('can set tenant key on model', function (mixed $key, mixed $result) {
+it('can set tenant key on model', function (Tenant|int|null $key, Tenant|int|null $result) {
     $article = Article::factory()->create();
 
     $article->setTenantKey($key);
