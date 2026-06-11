@@ -1,0 +1,7 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Trait Maize\\TenantAware\\BelongsToTenant is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/BelongsToTenant.php

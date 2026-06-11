@@ -1,5 +1,14 @@
 <?php
 
+use Maize\TenantAware\Actions\TenantCurrentAction;
+use Maize\TenantAware\Actions\TenantCurrentOrLandlordAction;
+use Maize\TenantAware\Actions\TenantLandlordAction;
+use Maize\TenantAware\Actions\TenantOnlyCurrentAction;
+use Maize\TenantAware\Listeners\SetTenantKey;
+use Maize\TenantAware\Scopes\ScopeOrTenantWhere;
+use Maize\TenantAware\Scopes\ScopeTenantAware;
+use Maize\TenantAware\Scopes\ScopeTenantWhere;
+
 return [
 
     'tenant' => [
@@ -39,10 +48,10 @@ return [
         */
 
         'actions' => [
-            'current' => Maize\TenantAware\Actions\TenantCurrentAction::class,
-            'landlord' => Maize\TenantAware\Actions\TenantLandlordAction::class,
-            'current_or_landlord' => Maize\TenantAware\Actions\TenantCurrentOrLandlordAction::class,
-            'only_current' => Maize\TenantAware\Actions\TenantOnlyCurrentAction::class,
+            'current' => TenantCurrentAction::class,
+            'landlord' => TenantLandlordAction::class,
+            'current_or_landlord' => TenantCurrentOrLandlordAction::class,
+            'only_current' => TenantOnlyCurrentAction::class,
         ],
 
     ],
@@ -75,7 +84,7 @@ return [
             |
             */
 
-            'creating' => Maize\TenantAware\Listeners\SetTenantKey::class,
+            'creating' => SetTenantKey::class,
         ],
     ],
 
@@ -93,7 +102,7 @@ return [
         |
         */
 
-        'apply' => Maize\TenantAware\Scopes\ScopeTenantAware::class,
+        'apply' => ScopeTenantAware::class,
 
         /*
         |--------------------------------------------------------------------------
@@ -106,9 +115,9 @@ return [
         */
 
         'methods' => [
-            Maize\TenantAware\Scopes\ScopeOrTenantWhere::class,
-            Maize\TenantAware\Scopes\ScopeTenantWhere::class,
-            Maize\TenantAware\Scopes\ScopeTenantAware::class,
+            ScopeOrTenantWhere::class,
+            ScopeTenantWhere::class,
+            ScopeTenantAware::class,
         ],
     ],
 ];

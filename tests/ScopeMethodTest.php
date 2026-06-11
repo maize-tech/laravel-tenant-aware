@@ -29,7 +29,7 @@ it('can apply scope tenant where', function (Tenant $current, ?Tenant $tenant = 
 
     expect($models->count())->toEqual($count);
 })->with([
-    ['current' => fn () => $this->tenant],
+    [fn () => $this->tenant],
     ['current' => fn () => $this->tenant, 'tenant' => fn () => $this->tenant, 'count' => 1],
     ['current' => fn () => $this->tenant,  'tenant' => fn () => $this->landlord],
     ['current' => fn () => $this->landlord, 'tenant' => fn () => $this->tenant],

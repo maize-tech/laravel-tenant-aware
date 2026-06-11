@@ -43,9 +43,9 @@ it('can set tenant key on creating model', function (?Tenant $tenant) {
 
     expect($article->getTenantKey())->toBe($tenant?->getKey());
 })->with([
-    ['tenant' => fn () => $this->tenant],
-    ['tenant' => fn () => $this->landlord],
-    ['tenant' => null],
+    [fn () => $this->tenant],
+    [fn () => $this->landlord],
+    [null],
 ]);
 
 it('can set tenant key on model', function (Tenant|int|null $key, Tenant|int|null $result) {
@@ -69,6 +69,6 @@ it('can get tenant model', function (Tenant $tenant) {
 
     expect($article->tenant->getKey())->toBe($tenant->getKey());
 })->with([
-    ['tenant' => fn () => $this->tenant],
-    ['tenant' => fn () => $this->landlord],
+    [fn () => $this->tenant],
+    [fn () => $this->landlord],
 ]);
