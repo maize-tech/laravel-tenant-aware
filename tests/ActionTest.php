@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Maize\TenantAware\Actions\TenantCurrentAction;
 use Maize\TenantAware\Actions\TenantCurrentOrLandlordAction;
 use Maize\TenantAware\Actions\TenantLandlordAction;
@@ -19,19 +17,25 @@ it('can get null actions', function () {
     expect(app(TenantCurrentOrLandlordAction::class)())->toBeNull();
 });
 
-it('can get only current tenant', function (Model|Builder $builder, bool $request, bool $result) {
+it('can get only current tenant', function (string $model, bool $asModel, bool $request, bool $result) {
+    $builder = $model::withoutGlobalScopes();
+
+    if ($asModel) {
+        $builder = $builder->getModel();
+    }
+
     if ($request) {
         request()->merge(['tenant.only_current' => null]);
     }
 
     expect(app(TenantOnlyCurrentAction::class)($builder))->toBe($result);
 })->with([
-    ['builder' => fn () => User::withoutGlobalScopes(), 'request' => true, 'result' => true],
-    ['builder' => fn () => User::withoutGlobalScopes(), 'request' => false, 'result' => true],
-    ['builder' => fn () => Article::withoutGlobalScopes(), 'request' => true, 'result' => true],
-    ['builder' => fn () => Article::withoutGlobalScopes(), 'request' => false, 'result' => false],
-    ['builder' => fn () => User::withoutGlobalScopes()->getModel(), 'request' => true, 'result' => true],
-    ['builder' => fn () => User::withoutGlobalScopes()->getModel(), 'request' => false, 'result' => true],
-    ['builder' => fn () => Article::withoutGlobalScopes()->getModel(), 'request' => true, 'result' => true],
-    ['builder' => fn () => Article::withoutGlobalScopes()->getModel(), 'request' => false, 'result' => false],
+    [User::class, false, true, true],
+    [User::class, false, false, true],
+    [Article::class, false, true, true],
+    [Article::class, false, false, false],
+    [User::class, true, true, true],
+    [User::class, true, false, true],
+    [Article::class, true, true, true],
+    [Article::class, true, false, false],
 ]);

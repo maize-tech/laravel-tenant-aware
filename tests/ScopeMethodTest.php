@@ -18,49 +18,49 @@ beforeEach(function () {
     $this->tenant->makeCurrent();
 });
 
-it('can apply scope tenant where', function (Tenant $current, ?Tenant $tenant = null, int $count = 0, int $articles = 1) {
-    $current->makeCurrent();
+it('can apply scope tenant where', function (string $current, ?string $tenant = null, int $count = 0, int $articles = 1) {
+    $this->{$current}->makeCurrent();
     Article::factory()->count($articles)->create();
 
     $models = app(ScopeTenantWhere::class)(
         Article::withoutGlobalScopes(),
-        $tenant
+        $tenant ? $this->{$tenant} : null
     )->get();
 
     expect($models->count())->toEqual($count);
 })->with([
-    ['current' => fn () => $this->tenant],
-    ['current' => fn () => $this->tenant, 'tenant' => fn () => $this->tenant, 'count' => 1],
-    ['current' => fn () => $this->tenant,  'tenant' => fn () => $this->landlord],
-    ['current' => fn () => $this->landlord, 'tenant' => fn () => $this->tenant],
-    ['current' => fn () => $this->landlord, 'tenant' => fn () => $this->landlord, 'count' => 1],
-    ['current' => fn () => $this->tenant, 'tenant' => fn () => $this->tenant, 'count' => 5, 'articles' => 5],
-    ['current' => fn () => $this->landlord, 'tenant' => fn () => $this->landlord, 'count' => 15, 'articles' => 15],
+    ['tenant'],
+    ['tenant', 'tenant', 1],
+    ['tenant', 'landlord'],
+    ['landlord', 'tenant'],
+    ['landlord', 'landlord', 1],
+    ['tenant', 'tenant', 5, 5],
+    ['landlord', 'landlord', 15, 15],
 ]);
 
-it('can apply scope or tenant where', function (string $condition, Tenant $current, ?Tenant $tenant = null, int $count = 0, int $articles = 1) {
-    $current->makeCurrent();
+it('can apply scope or tenant where', function (string $condition, string $current, ?string $tenant = null, int $count = 0, int $articles = 1) {
+    $this->{$current}->makeCurrent();
     Article::factory()->count($articles)->create();
 
     $models = app(ScopeOrTenantWhere::class)(
         Article::withoutGlobalScopes()->whereRaw($condition),
-        $tenant
+        $tenant ? $this->{$tenant} : null
     )->get();
 
     expect($models->count())->toEqual($count);
 })->with([
-    ['condition' => '1=0', 'current' => fn () => $this->tenant],
-    ['condition' => '1=1', 'current' => fn () => $this->tenant, 'tenant' => fn () => $this->tenant, 'count' => 1],
-    ['condition' => '1=0', 'current' => fn () => $this->tenant, 'tenant' => fn () => $this->tenant, 'count' => 1],
-    ['condition' => '1=1', 'current' => fn () => $this->tenant, 'tenant' => fn () => $this->tenant, 'count' => 1],
-    ['condition' => '1=0', 'current' => fn () => $this->tenant,  'tenant' => fn () => $this->landlord],
-    ['condition' => '1=1', 'current' => fn () => $this->tenant,  'tenant' => fn () => $this->landlord, 'count' => 1],
-    ['condition' => '1=0', 'current' => fn () => $this->landlord, 'tenant' => fn () => $this->tenant],
-    ['condition' => '1=1', 'current' => fn () => $this->landlord, 'tenant' => fn () => $this->tenant, 'count' => 1],
-    ['condition' => '1=0', 'current' => fn () => $this->landlord, 'tenant' => fn () => $this->landlord, 'count' => 1],
-    ['condition' => '1=1', 'current' => fn () => $this->landlord, 'tenant' => fn () => $this->landlord, 'count' => 1],
-    ['condition' => '1=0', 'current' => fn () => $this->tenant, 'tenant' => fn () => $this->tenant, 'count' => 5, 'articles' => 5],
-    ['condition' => '1=1', 'current' => fn () => $this->tenant, 'tenant' => fn () => $this->tenant, 'count' => 5, 'articles' => 5],
-    ['condition' => '1=0', 'current' => fn () => $this->landlord, 'tenant' => fn () => $this->landlord, 'count' => 15, 'articles' => 15],
-    ['condition' => '1=1', 'current' => fn () => $this->landlord, 'tenant' => fn () => $this->landlord, 'count' => 15, 'articles' => 15],
+    ['1=0', 'tenant'],
+    ['1=1', 'tenant', 'tenant', 1],
+    ['1=0', 'tenant', 'tenant', 1],
+    ['1=1', 'tenant', 'tenant', 1],
+    ['1=0', 'tenant', 'landlord'],
+    ['1=1', 'tenant', 'landlord', 1],
+    ['1=0', 'landlord', 'tenant'],
+    ['1=1', 'landlord', 'tenant', 1],
+    ['1=0', 'landlord', 'landlord', 1],
+    ['1=1', 'landlord', 'landlord', 1],
+    ['1=0', 'tenant', 'tenant', 5, 5],
+    ['1=1', 'tenant', 'tenant', 5, 5],
+    ['1=0', 'landlord', 'landlord', 15, 15],
+    ['1=1', 'landlord', 'landlord', 15, 15],
 ]);

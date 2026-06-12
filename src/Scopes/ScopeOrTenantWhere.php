@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ScopeOrTenantWhere extends ScopeMethod
 {
-    public function __invoke(Builder $builder, ?Model $tenant): builder
+    public function __invoke(Builder $builder, ?Model $tenant): Builder
     {
         return $builder->orWhere(
             $this->resolveTenantForeignKeyName($builder),

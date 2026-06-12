@@ -10,7 +10,7 @@ trait BelongsToTenant
 {
     public static function bootBelongsToTenant(): void
     {
-        static::addGlobalScope(new TenantAwareScope());
+        static::addGlobalScope(new TenantAwareScope);
 
         static::creating(
             Config::getModelCreatingListener()

@@ -32,7 +32,9 @@ it('can get qualified tenant key name', function (string $key) {
     ['key' => 'tid'],
 ]);
 
-it('can set tenant key on creating model', function (?Tenant $tenant) {
+it('can set tenant key on creating model', function (?string $which) {
+    $tenant = $which ? $this->{$which} : null;
+
     $tenant?->makeCurrent();
 
     if (is_null($tenant)) {
@@ -43,32 +45,36 @@ it('can set tenant key on creating model', function (?Tenant $tenant) {
 
     expect($article->getTenantKey())->toBe($tenant?->getKey());
 })->with([
-    ['tenant' => fn () => $this->tenant],
-    ['tenant' => fn () => $this->landlord],
-    ['tenant' => null],
+    ['tenant'],
+    ['landlord'],
+    [null],
 ]);
 
-it('can set tenant key on model', function (Tenant|int|null $key, Tenant|int|null $result) {
+it('can set tenant key on model', function (?string $which, bool $asKey) {
     $article = Article::factory()->create();
 
-    $article->setTenantKey($key);
+    $tenant = $which ? $this->{$which} : null;
 
-    expect($article->getTenantKey())->toBe($result);
+    $article->setTenantKey($asKey ? $tenant?->getKey() : $tenant);
+
+    expect($article->getTenantKey())->toBe($tenant?->getKey());
 })->with([
-    ['key' => fn () => $this->tenant, 'result' => fn () => $this->tenant->getKey()],
-    ['key' => fn () => $this->landlord, 'result' => fn () => $this->landlord->getKey()],
-    ['key' => fn () => $this->tenant->getKey(), 'result' => fn () => $this->tenant->getKey()],
-    ['key' => fn () => $this->landlord->getKey(), 'result' => fn () => $this->landlord->getKey()],
-    ['key' => null, 'result' => null],
+    ['tenant', false],
+    ['landlord', false],
+    ['tenant', true],
+    ['landlord', true],
+    [null, false],
 ]);
 
-it('can get tenant model', function (Tenant $tenant) {
+it('can get tenant model', function (string $which) {
+    $tenant = $this->{$which};
+
     $tenant->makeCurrent();
 
     $article = Article::factory()->create();
 
     expect($article->tenant->getKey())->toBe($tenant->getKey());
 })->with([
-    ['tenant' => fn () => $this->tenant],
-    ['tenant' => fn () => $this->landlord],
+    ['tenant'],
+    ['landlord'],
 ]);
